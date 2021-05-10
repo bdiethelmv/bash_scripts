@@ -1,0 +1,20 @@
+## November 22 2020
+## Author BDV
+## The Arch User Repository (AUR)
+
+To browse for packages, go to aur.archlinux.org and type a search query
+in "Package Search"
+
+When a package is found, click download snapshot and save the tarball
+Usually the following works:
+tar -xvf <filename>
+
+Change directory to the extracted folder
+
+The PKGBUILD is the file that builds the program. It is a good idea to
+read what it actually does before proceeding with the command below
+
+makepkg -s
+
+When done, install the generated package
+sudo pacman -U <tarball name>

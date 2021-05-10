@@ -1,0 +1,103 @@
+#!/bin/sh
+
+## September 07 2020
+## Author: BDV
+## GZDoom wad launcher
+
+cd ~/games/wads
+echo '\n'
+echo 'Welcome to the Doom engine selection script\n'
+echo 'Available wads are listed below\n'
+ls *.WAD *.wad
+echo '\nIf you wish to play an unmodified Doom engine game, please type the number of the base wad file from the list below. If you wish to use a custom wad file, type 0. If you want to play Quake instead, type 666\n' 
+echo '1 Doom' 
+echo '2 Doom 2' 
+echo '3 Plutonia' 
+echo '4 TNT' 
+echo '5 Heretic' 
+echo '6 Hexen' 
+echo '7 Hexen Death Kings' 
+echo '8 Strife\n'
+read choice
+if [ $choice -eq 1 ]
+then
+	gzdoom -iwad DOOM.WAD
+fi
+if [ $choice -eq 2 ]
+then
+	gzdoom -iwad DOOM2.WAD
+fi
+if [ $choice -eq 3 ]
+then
+	gzdoom -iwad PLUTONIA.WAD
+fi
+if [ $choice -eq 4 ]
+then
+	gzdoom -iwad TNT.WAD
+fi
+if [ $choice -eq 5 ]
+then
+	gzdoom -iwad HERETIC.WAD
+fi
+if [ $choice -eq 6 ]
+then
+	gzdoom -iwad HEXEN.WAD
+fi
+if [ $choice -eq 7 ]
+then
+	gzdoom -iwad HEXDD.WAD
+fi
+if [ $choice -eq 8 ]
+then
+	gzdoom -iwad strife1.WAD
+fi
+if [ $choice -eq 666 ]
+then
+	cd ~
+	quakespasm
+fi
+if [ $choice -eq 0 ]
+then
+	echo '\nType the desired wad file. File names are case-sensitive\n'
+	read wad
+	echo '\nSelect the base wad (from the list above) that is to be used with your chosen wad file\n'
+	read basewad
+	if [ $basewad -eq 1 ]
+	then
+		gzdoom -iwad DOOM.WAD -file $wad
+	fi
+	if [ $basewad -eq 2 ]
+	then
+		gzdoom -iwad DOOM2.WAD -file $wad
+	fi
+	if [ $basewad -eq 3 ]
+	then
+		gzdoom -iwad PLUTONIA.WAD -file $wad
+	fi
+	if [ $basewad -eq 4 ]
+	then
+		gzdoom -iwad TNT.WAD -file $wad
+	fi
+	if [ $basewad -eq 5 ]
+	then
+		gzdoom -iwad HERETIC.WAD -file $wad
+	fi
+	if [ $basewad -eq 6 ]
+	then
+		gzdoom -iwad HEXEN.WAD -file $wad
+	fi
+	if [ $basewad -eq 7 ]
+	then
+		gzdoom -iwad HEXDD.WAD -file $wad
+	fi
+	if [ $basewad -eq 8 ]
+	then
+		gzdoom -iwad strife1.WAD -file $wad
+	else
+		echo '\nBye\n'
+	fi
+else
+	echo '\nBye\n'
+fi
+
+

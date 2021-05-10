@@ -9,7 +9,7 @@ echo '\n'
 echo 'Welcome to the Doom engine selection script\n'
 echo 'Available wads are listed below\n'
 ls *.WAD *.wad
-echo '\nIf you wish to play an unmodified Doom engine game, please type the number of the base wad file from the list below. If you wish to use a custom wad file, type 0. If you want to play Quake instead, type 666\n' 
+echo '\nIf you wish to play an unmodified Doom engine game, please type the number of the base wad file from the list below. If you wish to use a custom wad file, type 0' 
 echo '1 Doom' 
 echo '2 Doom 2' 
 echo '3 Plutonia' 

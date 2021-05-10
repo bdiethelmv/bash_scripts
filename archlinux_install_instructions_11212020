@@ -1,0 +1,121 @@
+## November 21 2020
+## Author: BDV
+## Arch Linux installation guide
+
+This guide uses a classic BIOS boot option, instead of the more modern
+UEFI. Works well on classic Thinkpad laptops
+
+## Part 1 - Install a base Linux system ##
+
+1. Download the latest Arch Linux iso image and write it into a USB stick
+(typical command would be sudo dd if=isoimage.iso of=path/to/usb/stick 
+bs=4M status=progress conv=fdatasync
+
+2. Boot computer from USB drive and select standard Arch installation
+from the resulting menu
+
+3. Connect to the internet using the iwctl program. See the Arch wiki
+for details
+
+4. Set time and date with timedatectl set-ntp true
+
+5. Format drive where Arch will be installed with dd if=dev/zero 
+of=dev/sda bs=1M count=1 (replace sda with the target drive). Use 
+fdisk -l or lsblk to see disks and partitions
+
+6. Use cfdisk /dev/yourdisk to partition the disks. Select gpt as 
+label type. Create and write a 4G swap partition, a 500M BIOS boot
+partition, and a linux partition for the root directory with all the
+remaining storage space
+
+7. Format partitions. mkswap /dev/swap_partition. swapon /dev/swap_partition
+mkfs.ext4 /dev/linux_partition
+
+8. Mount the root partition. mount /dev/linux_partition /mnt
+
+9. Install the base system. pacstrap -i /mnt base base-devel
+
+10. Generate the fstab. genfstab -p /mnt >> /mnt/etc/fstab. Check with
+cat /mnt/etc/fstab
+
+11. Enter into the new installation with change root. arch-chroot /mnt
+
+12. Set time zone. ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
+
+13. Set the hardware clock. hwclock --systohc --utc
+
+14. Install essential Linux software. pacman -S linux linux-headers
+linux-firmware
+
+15. Install some extra software. sudo pacman -S nano openssh dialog sudo
+
+16. If using openssh: systemctl enable sshd
+
+17. Install network utilities. pacman -S networkmanager wpa_supplicant
+wireless_tools netctl
+
+18. Enable network manager. systemctl enable NetworkManager
+
+19. Generate initial ramdisk for linux kernel. mkinitcpio -p linux
+
+20. Configure locale. nano /etc/locale.gen. Uncomment corresponding locale (en_US.UTF-8)
+
+21. Generate locale. locale-gen
+add locale (as LANG=locale.UTF). nano /etc/locale.conf
+add host name. nano /etc/hostname
+configure hosts. nano /etc/hosts. Add the following lines:
+127.0.0.1	localhost
+::1		localhost
+127.0.1.1	<hostname>.localdomain <hostname>
+
+22. set root password. passwd
+
+23. Create a user. useradd -m -g users -G wheel username
+
+24. Set password for user. passwd username
+
+25. Add username to sudoers. EDITOR=nano visudo. 
+Uncomment the %wheel ALL=(ALL) ALL line
+
+26. Install grub. pacman -S grub os-prober
+
+27. Activate grub. grub-install /dev/yourdisk
+If an error is given due to defaulting to EFI, 
+use the --target=i386 argument
+
+28. Make the grub config. grub-mkconfig -o /boot/grub/grub.cfg
+
+29. (This is an alternative to creating a swap partition)
+
+Create a swap file. fallocate -l 2G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+cp /etc/fstab /etc/fstab.bak
+echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab
+cat /etc/fstab
+
+30. Install some extra goodies. pacman -S intel-ucode mesa
+
+31. Reboot the system to make sure the installation is bootable and
+working. If not, try to access the installation through the installer
+using arch-chroot
+exit
+umount -a
+poweroff
+
+## Part 2 - Configuring the system ##
+
+32. Install xorg. sudo pacman -S xorg xorg-server
+
+33. Install pulse audio. sudo pacman -S pulseaudio pulseaudio-plugin
+
+34. Install a desktop environment launcher. sudo pacman -S lightdm
+
+35. Enable lightdm. sudo systemctl enable lightdm.target
+
+36. Install a desktop environment. Example below with xfce
+sudo pacman -S xfce4 xfce4-goodies xfce4-terminal
+
+37. Reboot
+
+38. Continue customizing via the GUI
